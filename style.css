@@ -1,0 +1,17 @@
+h1 {
+  text-align: center;
+}
+
+nav {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+input {
+  height: 1em;
+  width: 20em;
+}
+
+button {
+  margin: 5px;
+}
