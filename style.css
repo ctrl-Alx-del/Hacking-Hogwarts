@@ -26,6 +26,10 @@ button {
   width: 100%;
 }
 
+input {
+  margin-left: 20px;
+}
+
 .sorting,
 tr {
   display: grid;
