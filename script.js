@@ -20,6 +20,7 @@ const Student = {
   inquisatorialSquad: "",
   house: "",
   expelled: "not",
+  picture: "",
 };
 
 function start() {
@@ -48,6 +49,7 @@ function prepareObject(studentObject) {
   student.nickName = cleanUpNames(studentObject).nickName;
   student.lastName = cleanUpNames(studentObject).lastNameCleaned;
   student.house = cleanUpHouses(studentObject);
+  student.picture = picturesAdded(studentObject);
   student.gender = studentObject.gender;
   student.prefect = Student.prefect;
   student.bloodStatus = Student.bloodStatus;
@@ -117,6 +119,21 @@ function prepareObject(studentObject) {
     };
   }
 
+  function picturesAdded(studentData) {
+    const nameTrimmed = studentData.fullname.trim();
+    const splitNames = nameTrimmed.split(" ");
+
+    if (splitNames.length >= 2) {
+      let lastName = splitNames.pop();
+      let firstName = splitNames.shift();
+      lastName = lastName.toLowerCase();
+      firstName = firstName.charAt(0).toLowerCase();
+      const namesAdded = `${lastName}_${firstName}.png`;
+
+      return namesAdded;
+    }
+  }
+
   return student;
 }
 
@@ -159,6 +176,9 @@ function displayData(student) {
     const middleName = document.querySelector(".innerPopUp > p:nth-child(2)");
     const nickName = document.querySelector(".innerPopUp > p:nth-child(3)");
     const lastName = document.querySelector(".lastName");
+    const profilePic = document.querySelector(".picture");
+
+    profilePic.src = `images/${student.picture}`;
 
     firstName.textContent = `First name: ${student.firstName}`;
     if (student.middleName === "") {
