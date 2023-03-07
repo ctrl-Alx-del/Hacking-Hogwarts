@@ -15,3 +15,25 @@ input {
 button {
   margin: 5px;
 }
+
+#stats {
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+#list {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.sorting,
+tr {
+  display: grid;
+  grid-template-columns: 1fr 200px 200px 200px 1fr;
+}
+
+#list,
+th,
+td {
+  border: 1px solid black;
+}

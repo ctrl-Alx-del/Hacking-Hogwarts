@@ -12,24 +12,40 @@
     <nav>
       <div class="Buttons"><button>House</button><button>Prefects</button><button>Blood status</button><button>Expelled</button></div>
 
-      <div>
-        <p>Number of students:</p>
-        <p>Total number of students:</p>
+      <div id="stats">
+        <h2>Stats</h2>
+        <p>Number of students pr. house:</p>
+        <p class="total"></p>
         <p>Number of expelled students:</p>
-        <p>Number of current students:</p>
+        <p>Number of students displayed:</p>
       </div>
 
       <input class="input" type="text" />
     </nav>
 
-    <template
-      ><th>
-        <tr class="names"></tr>
-        <tr class="bloodStatus"></tr>
-        <tr class="prefects"></tr>
-        <tr class="inquisatorialSquad"></tr>
-        <tr class="house"></tr>
-      </th>
+    <table id="list">
+      <thead>
+        <tr class="sorting">
+          <th>Name</th>
+          <th>Blood status</th>
+          <th>Prefects</th>
+          <th>Inquisitatorial squad</th>
+          <th>House</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- students template will be copied and inserted here -->
+      </tbody>
+    </table>
+
+    <template class="students">
+      <tr>
+        <td class="names"></td>
+        <td class="bloodStatus"></td>
+        <td class="prefects"></td>
+        <td class="inquisatorialSquad"></td>
+        <td class="house"></td>
+      </tr>
     </template>
 
     <script src="script.js"></script>
