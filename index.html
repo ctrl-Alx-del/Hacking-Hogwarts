@@ -23,24 +23,41 @@
       <input class="input" type="text" />
     </nav>
 
-    <table id="list">
-      <thead>
-        <tr class="sorting">
-          <th>Name</th>
-          <th>Blood status</th>
-          <th>Prefects</th>
-          <th>Inquisitatorial squad</th>
-          <th>House</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- students template will be copied and inserted here -->
-      </tbody>
-    </table>
+    <section>
+      <table id="list">
+        <thead>
+          <tr class="sorting">
+            <th>Name</th>
+            <th>Blood status</th>
+            <th>Prefects</th>
+            <th>Inquisitatorial squad</th>
+            <th>House</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- students template will be copied and inserted here -->
+        </tbody>
+      </table>
+    </section>
+
+    <div class="popUp">
+      <div class="innerPopUp">
+        <p>First name</p>
+        <p>Middle name</p>
+        <p>Nickname</p>
+        <p>Last name</p>
+        <img src="" alt="Photo" />
+        <img src="" alt="House crest" />
+        <p>Prefect status:</p>
+        <p>Expelled status:</p>
+        <p>Inquisitatorial squad status:</p>
+      </div>
+      <button class="exit">X</button>
+    </div>
 
     <template class="students">
-      <tr>
-        <td class="names"></td>
+      <tr class="studentRow">
+        <td data-student="names"></td>
         <td class="bloodStatus"></td>
         <td class="prefects"></td>
         <td class="inquisatorialSquad"></td>
