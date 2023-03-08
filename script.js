@@ -33,8 +33,13 @@ const Student = {
 function start() {
   loadJSON();
 
+  //making the houses selection clickable
   document.querySelectorAll(".option").forEach((eachButton) => {
     eachButton.addEventListener("click", dataFilter);
+  });
+
+  document.querySelectorAll("[data-action='sort']").forEach((eachButton) => {
+    eachButton.addEventListener("click", selectSort);
   });
 }
 
@@ -150,8 +155,9 @@ function prepareObject(studentObject) {
 
 function buildList() {
   const currentList = filterHouse(allStudents);
+  const sortedList = sorting(currentList);
 
-  displayList(currentList);
+  displayList(sortedList);
 
   statistics();
 }
@@ -325,7 +331,49 @@ function search(student) {
   });
 }
 
-function sorting() {}
+function sorting(sortedList) {
+  let direction = 1;
+  if (settings.sortDir === "desc") {
+    direction = -1;
+  } else {
+    direction = 1;
+  }
+
+  sortedList = sortedList.sort(sortByProperty);
+
+  function sortByProperty(studentA, studentB) {
+    if (studentA[settings.sortBy] < studentB[settings.sortBy]) {
+      return -1 * direction;
+    } else if (studentA[settings.sortBy] > studentB[settings.sortBy]) {
+      return 1 * direction;
+    } else {
+      return 0;
+    }
+  }
+
+  return sortedList;
+}
+
+function selectSort(event) {
+  const sortBy = event.target.dataset.sort;
+  const sortDir = event.target.dataset.sortDirection;
+
+  //toggle direction
+  if (sortDir === "asc") {
+    event.target.dataset.sortDirection = "desc";
+  } else {
+    event.target.dataset.sortDirection = "asc";
+  }
+
+  setSort(sortBy, sortDir);
+}
+
+function setSort(sortBy, sortDir) {
+  settings.sortBy = sortBy;
+  settings.sortDir = sortDir;
+
+  buildList();
+}
 
 function dataFilter(event) {
   const filter = event.target.value;
