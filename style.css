@@ -1,5 +1,10 @@
-h1 {
+h1,
+h2 {
   text-align: center;
+}
+
+p {
+  padding-left: 10px;
 }
 
 nav {
@@ -63,4 +68,33 @@ td {
 
 section {
   z-index: 2;
+}
+
+.crests {
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 100px;
+  height: 130px;
+}
+
+.gryffindor {
+  background-color: red;
+}
+
+.slytherin {
+  background-color: green;
+}
+
+.hufflepuff {
+  background-color: yellow;
+}
+
+.ravenclaw {
+  background-color: rgb(87, 87, 255);
+}
+
+.prHouse {
+  display: grid;
+  grid-template-columns: repeat(2, 136px);
+  grid-template-rows: repeat(2, 40px);
 }

@@ -10,17 +10,26 @@
   <body>
     <h1>Hogwarts 1991</h1>
     <nav>
-      <div class="Buttons"><button>House</button><button>Prefects</button><button>Blood status</button><button>Expelled</button></div>
+      <div class="Buttons">
+        <select name="" id="changer">
+          <option class="option" value="All">All</option>
+          <option class="option" value="Gryffindor">Gryffindor</option>
+          <option class="option" value="Hufflepuff">Hufflepuff</option>
+          <option class="option" value="Ravenclaw">Ravenclaw</option>
+          <option class="option" value="Slytherin">Slytherin</option></select
+        ><button>Prefects</button><button>Blood status</button><button>Expelled</button>
+      </div>
 
       <div id="stats">
         <h2>Stats</h2>
-        <p class="prHouse"></p>
+        <p>Number of students pr. house:</p>
+        <div class="prHouse"></div>
         <p class="total"></p>
         <p>Number of expelled students:</p>
-        <p>Number of students displayed:</p>
+        <p class="displayed"></p>
       </div>
 
-      <input class="input" type="text" />
+      <input class="input" type="text" placeholder="Search..." name="search" />
     </nav>
 
     <section>
@@ -52,7 +61,7 @@
       </div>
       <div>
         <img src="" alt="Photo" class="picture" />
-        <img src="" alt="House crest" />
+        <img src="" alt="House crest" class="crests" />
       </div>
       <button class="exit">X</button>
     </div>

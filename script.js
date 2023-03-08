@@ -4,11 +4,18 @@ window.addEventListener("DOMContentLoaded", start);
 
 let allStudents = [];
 let expelled = [];
+
 //houses
 let gryffindor = [];
 let slytherin = [];
 let hufflepuff = [];
 let ravenclaw = [];
+
+const settings = {
+  chosenFilter: "All",
+  sortDir: "asc",
+  sortBy: "",
+};
 
 const Student = {
   firstName: "",
@@ -25,6 +32,10 @@ const Student = {
 
 function start() {
   loadJSON();
+
+  document.querySelectorAll(".option").forEach((eachButton) => {
+    eachButton.addEventListener("click", dataFilter);
+  });
 }
 
 async function loadJSON() {
@@ -138,10 +149,50 @@ function prepareObject(studentObject) {
 }
 
 function buildList() {
-  const currentList = allStudents;
+  const currentList = filterHouse(allStudents);
+
   displayList(currentList);
 
   statistics();
+}
+
+//filtering
+function filterHouse(theFilteredList) {
+  if (settings.chosenFilter === "Gryffindor") {
+    theFilteredList = allStudents.filter(isGryffindor);
+  } else if (settings.chosenFilter === "Hufflepuff") {
+    theFilteredList = allStudents.filter(isHufflepuff);
+  } else if (settings.chosenFilter === "Ravenclaw") {
+    theFilteredList = allStudents.filter(isRavenclaw);
+  } else if (settings.chosenFilter === "Slytherin") {
+    theFilteredList = allStudents.filter(isSlytherin);
+  }
+
+  return theFilteredList;
+}
+
+function isGryffindor(student) {
+  if (student.house === "Gryffindor") {
+    return true;
+  }
+}
+
+function isHufflepuff(student) {
+  if (student.house === "Hufflepuff") {
+    return true;
+  }
+}
+
+function isRavenclaw(student) {
+  if (student.house === "Ravenclaw") {
+    return true;
+  }
+}
+
+function isSlytherin(student) {
+  if (student.house === "Slytherin") {
+    return true;
+  }
 }
 
 function displayList(students) {
@@ -163,11 +214,12 @@ function displayData(student) {
   } else if (student.house === "Gryffindor") {
     clone.querySelector("[data-student='house']").style.backgroundColor = "red";
   } else if (student.house === "Ravenclaw") {
-    clone.querySelector("[data-student='house']").style.backgroundColor = "blue";
+    clone.querySelector("[data-student='house']").style.backgroundColor = "rgb(87, 87, 255)";
   } else if (student.house === "Slytherin") {
     clone.querySelector("[data-student='house']").style.backgroundColor = "green";
   }
 
+  //popUp
   function popUp() {
     const popUpDisplay = document.querySelector(".popUp");
     popUpDisplay.style.display = "flex";
@@ -177,6 +229,31 @@ function displayData(student) {
     const nickName = document.querySelector(".innerPopUp > p:nth-child(3)");
     const lastName = document.querySelector(".lastName");
     const profilePic = document.querySelector(".picture");
+    const crests = document.querySelector(".crests");
+
+    crests.src = `images/crests/${student.house}.png`;
+
+    if (student.house === "Gryffindor") {
+      crests.classList.remove("ravenclaw");
+      crests.classList.remove("hufflepuff");
+      crests.classList.remove("slytherin");
+      crests.classList.add("gryffindor");
+    } else if (student.house === "Slytherin") {
+      crests.classList.remove("ravenclaw");
+      crests.classList.remove("hufflepuff");
+      crests.classList.remove("gryffindor");
+      crests.classList.add("slytherin");
+    } else if (student.house === "Hufflepuff") {
+      crests.classList.remove("ravenclaw");
+      crests.classList.remove("slytherin");
+      crests.classList.remove("gryffindor");
+      crests.classList.add("hufflepuff");
+    } else if (student.house === "Ravenclaw") {
+      crests.classList.remove("hufflepuff");
+      crests.classList.remove("slytherin");
+      crests.classList.remove("gryffindor");
+      crests.classList.add("ravenclaw");
+    }
 
     profilePic.src = `images/${student.picture}`;
 
@@ -211,19 +288,53 @@ function statistics() {
   const totalNumber = document.querySelector(".total");
   totalNumber.textContent = `Total number of current students: ${allStudents.length}`;
 
-  //students pr. house
-  const studentsPrHouse = document.querySelector(".prHouse");
-  studentsPrHouse.textContent = `Number of students pr. house:`;
-
   //total number of students expelled
 
-  //Number of students displayed
+  //Number of students displayed. May have to be modified when you get to filter expelled students and all the others
+  const numbersDisplayed = Number(filterHouse(allStudents).length);
+  const displayContainer = document.querySelector(".displayed");
+  displayContainer.textContent = `Number of students displayed: ${numbersDisplayed}`;
 
   //make an array for each house and put students into that and read their length
-  function calcHouses() {
-    // if(student.house === gryffindor){
-    // }
-  }
+  gryffindor = allStudents.filter(isGryffindor);
+  slytherin = allStudents.filter(isSlytherin);
+  hufflepuff = allStudents.filter(isHufflepuff);
+  ravenclaw = allStudents.filter(isRavenclaw);
+
+  const totalGryf = gryffindor.length;
+  const totalRaven = ravenclaw.length;
+  const totalHuff = hufflepuff.length;
+  const totalSlyth = ravenclaw.length;
+
+  //students pr. house
+  const studentsPrHouse = document.querySelector(".prHouse");
+  studentsPrHouse.innerHTML = `<p>Gryffindor: ${totalGryf}</p> <p>Slytherin: ${totalSlyth}</p> 
+  <p>Hufflepuff: ${totalHuff}</p> <p>Ravenclaw: ${totalRaven}`;
 }
 
 function hackTheSystem() {}
+
+function search(student) {
+  const searchBar = document.querySelector(".input");
+  searchBar.addEventListener("input", (element) => {
+    let value = element.target.value;
+
+    const eachStudent = student.forEach((element) => {
+      const firstName = element.firstName;
+    });
+  });
+}
+
+function sorting() {}
+
+function dataFilter(event) {
+  const filter = event.target.value;
+
+  setFilter(filter);
+}
+
+function setFilter(filterBy) {
+  settings.chosenFilter = filterBy;
+
+  buildList();
+}
