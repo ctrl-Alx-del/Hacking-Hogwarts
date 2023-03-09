@@ -26,7 +26,7 @@ const Student = {
   prefect: "none",
   inquisatorialSquad: "",
   house: "",
-  expelled: "not",
+  expelled: false,
   picture: "",
 };
 
@@ -286,18 +286,36 @@ function displayData(student) {
       popUpDisplay.style.display = "none";
     }
 
-    //work in progress!!!
-    //expel button clickable
     const expelButtons = document.querySelectorAll(".expel");
     expelButtons.forEach((eachButton) => {
       eachButton.addEventListener("click", expel);
     });
 
+    //removes the fade so it doesn't occur everytime you open a new popup
+    popUpDisplay.classList.remove("expelledFromHogwarts");
+
     //work in progress!!!
     function expel() {
       const nameOfStudent = student.firstName;
-      const indexOfStudent = allStudents.indexOf(nameOfStudent);
-      console.log(indexOfStudent);
+
+      const indexOfStudent = allStudents.map((element) => element.firstName).indexOf(nameOfStudent);
+
+      expelledStudents = allStudents.splice(indexOfStudent, 1);
+
+      popUpDisplay.classList.add("expelledFromHogwarts");
+      popUpDisplay.addEventListener("animationend", () => {
+        popUpDisplay.style.display = "none";
+      });
+
+      //removes the eventlistener when you click expel, so it won't count twice next time you click.
+      expelButtons.forEach((eachButton) => {
+        eachButton.removeEventListener("click", expel);
+      });
+
+      //sets the key value of expelled to true
+      student.expelled = true;
+
+      buildList();
     }
   }
 
@@ -310,6 +328,8 @@ function statistics() {
   totalNumber.textContent = `Total number of current students: ${allStudents.length}`;
 
   //total number of students expelled
+  const expelNum = document.querySelector(".numExpelled");
+  expelNum.textContent = `Number of expelled students: ${expelledStudents.length}`;
 
   //Number of students displayed. May have to be modified when you get to filter expelled students and all the others
   const numbersDisplayed = Number(filterHouse(allStudents).length);

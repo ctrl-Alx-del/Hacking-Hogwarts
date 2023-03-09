@@ -105,3 +105,14 @@ section {
   flex-direction: column;
   justify-content: space-between;
 }
+
+.expelledFromHogwarts {
+  animation-name: dissapear;
+  animation-duration: 2s;
+}
+
+@keyframes dissapear {
+  100% {
+    opacity: 0;
+  }
+}
