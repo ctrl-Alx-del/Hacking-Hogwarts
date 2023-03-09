@@ -173,9 +173,17 @@ function filterHouse(theFilteredList) {
     theFilteredList = allStudents.filter(isRavenclaw);
   } else if (settings.chosenFilter === "Slytherin") {
     theFilteredList = allStudents.filter(isSlytherin);
+  } else if (settings.chosenFilter === "expelled") {
+    theFilteredList = expelledStudents.filter(isExpelled);
   }
 
   return theFilteredList;
+}
+
+function isExpelled(student) {
+  if (student.expelled === true) {
+    return true;
+  }
 }
 
 function isGryffindor(student) {
