@@ -29,7 +29,7 @@
         <p class="displayed"></p>
       </div>
 
-      <input class="input" type="text" placeholder="Search..." name="search" />
+      <input class="input" onkeyup="search()" type="text" placeholder="Search names..." name="search" />
     </nav>
 
     <section>
@@ -63,16 +63,20 @@
         <img src="" alt="Photo" class="picture" />
         <img src="" alt="House crest" class="crests" />
       </div>
-      <button class="exit">X</button>
+      <div class="popUpBtn">
+        <button class="exit">X</button>
+        <button class="expel" data-expel="firstName">Expel</button>
+        <button class="prefect">Give prefect status</button>
+      </div>
     </div>
 
     <template class="students">
       <tr class="studentRow">
-        <td data-student="names"></td>
-        <td data-student="bloodStatus"></td>
-        <td data-student="prefects"></td>
-        <td data-student="inquisatorialSquad"></td>
-        <td data-student="house"></td>
+        <td class="names" data-student="names"></td>
+        <td class="bloodStatus" data-student="bloodStatus"></td>
+        <td class="prefects" data-student="prefects"></td>
+        <td class="inquisatorialSquad" data-student="inquisatorialSquad"></td>
+        <td class="house" data-student="house"></td>
       </tr>
     </template>
 

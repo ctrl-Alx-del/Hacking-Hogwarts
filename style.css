@@ -64,6 +64,7 @@ td {
 .exit {
   height: 2em;
   width: 2em;
+  margin-left: 5em;
 }
 
 section {
@@ -97,4 +98,10 @@ section {
   display: grid;
   grid-template-columns: repeat(2, 136px);
   grid-template-rows: repeat(2, 40px);
+}
+
+.popUpBtn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

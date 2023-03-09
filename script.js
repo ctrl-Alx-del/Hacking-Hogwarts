@@ -3,7 +3,7 @@
 window.addEventListener("DOMContentLoaded", start);
 
 let allStudents = [];
-let expelled = [];
+let expelledStudents = [];
 
 //houses
 let gryffindor = [];
@@ -38,6 +38,7 @@ function start() {
     eachButton.addEventListener("click", dataFilter);
   });
 
+  //making sorting table headers clickable
   document.querySelectorAll("[data-action='sort']").forEach((eachButton) => {
     eachButton.addEventListener("click", selectSort);
   });
@@ -284,6 +285,20 @@ function displayData(student) {
     function exitPopUp() {
       popUpDisplay.style.display = "none";
     }
+
+    //work in progress!!!
+    //expel button clickable
+    const expelButtons = document.querySelectorAll(".expel");
+    expelButtons.forEach((eachButton) => {
+      eachButton.addEventListener("click", expel);
+    });
+
+    //work in progress!!!
+    function expel() {
+      const nameOfStudent = student.firstName;
+      const indexOfStudent = allStudents.indexOf(nameOfStudent);
+      console.log(indexOfStudent);
+    }
   }
 
   document.querySelector("#list tbody").appendChild(clone);
@@ -319,17 +334,6 @@ function statistics() {
 }
 
 function hackTheSystem() {}
-
-function search(student) {
-  const searchBar = document.querySelector(".input");
-  searchBar.addEventListener("input", (element) => {
-    let value = element.target.value;
-
-    const eachStudent = student.forEach((element) => {
-      const firstName = element.firstName;
-    });
-  });
-}
 
 function sorting(sortedList) {
   let direction = 1;
@@ -385,4 +389,33 @@ function setFilter(filterBy) {
   settings.chosenFilter = filterBy;
 
   buildList();
+}
+
+function makePrefect() {}
+
+function search() {
+  let input = document.querySelector(".input").value;
+  input = input.toLowerCase();
+
+  let studentNames = document.getElementsByClassName("names");
+  let bloodStatus = document.getElementsByClassName("bloodStatus");
+  let house = document.getElementsByClassName("house");
+  let prefects = document.getElementsByClassName("prefects");
+  let inquisatorialSquad = document.getElementsByClassName("inquisatorialSquad");
+
+  for (let i = 0; i < studentNames.length; i++) {
+    if (!studentNames[i].innerHTML.toLowerCase().includes(input)) {
+      studentNames[i].style.display = "none";
+      bloodStatus[i].style.display = "none";
+      house[i].style.display = "none";
+      prefects[i].style.display = "none";
+      inquisatorialSquad[i].style.display = "none";
+    } else {
+      studentNames[i].style.display = "block";
+      bloodStatus[i].style.display = "block";
+      house[i].style.display = "block";
+      prefects[i].style.display = "block";
+      inquisatorialSquad[i].style.display = "block";
+    }
+  }
 }
