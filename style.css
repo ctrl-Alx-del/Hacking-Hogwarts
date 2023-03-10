@@ -117,6 +117,8 @@ section {
   }
 }
 
-.prefects {
+.prefects,
+.bloodStatus,
+.inquisatorialSquad {
   text-align: center;
 }

@@ -60,7 +60,46 @@ async function loadBloodStatsJSON() {
   const response = await fetch(url);
   const bloodData = await response.json();
 
-  console.log(bloodData);
+  sendData(bloodData);
+}
+
+function sendData(blood) {
+  for (let i = 0; i < allStudents.length; i++) {
+    let eachStudent = allStudents[i];
+    //Runs these function everytime it loops, not the most efficient, but it works for now...
+    prepareBloodStats(blood, eachStudent);
+  }
+}
+
+function prepareBloodStats(blood, student) {
+  const half = blood.half;
+  const pure = blood.pure;
+  let muggle = [];
+
+  //checks if the half blood names are included in the pure blood name. If there's a match it will push it to the muggles array
+  for (let i = 0; i < pure.length; i++) {
+    if (half.includes(pure[i])) {
+      muggle.push(pure[i]);
+    }
+    //checks if the student has the same name as a pure blood
+    if (student.lastName === pure[i]) {
+      student.bloodStatus = "Pure blood";
+    }
+  }
+
+  for (let i = 0; i < half.length; i++) {
+    if (student.lastName === half[i]) {
+      student.bloodStatus = "Half-blood";
+    }
+  }
+
+  for (let i = 0; i < muggle.length; i++) {
+    if (student.lastName === muggle[i]) {
+      student.bloodStatus = "Muggle";
+    }
+  }
+
+  buildList();
 }
 
 function prepareData(studentData) {
@@ -245,6 +284,16 @@ function displayData(student) {
     clone.querySelector("[data-student='house']").style.backgroundColor = "green";
   }
 
+  if (student.bloodStatus === "Pure blood") {
+    clone.querySelector(".bloodStatus").textContent = "Pure blood";
+  } else if (student.bloodStatus === "Half-blood" && student.bloodStatus !== "Muggle") {
+    clone.querySelector(".bloodStatus").textContent = "Half-blood";
+  } else if (student.bloodStatus === "Muggle") {
+    clone.querySelector(".bloodStatus").textContent = "Muggle";
+  } else if (student.bloodStatus === "") {
+    clone.querySelector(".bloodStatus").textContent = "Unknown";
+  }
+
   //popUp
   function popUp() {
     const popUpDisplay = document.querySelector(".popUp");
@@ -376,8 +425,6 @@ function displayData(student) {
         prefectRow.textContent = "";
       }
 
-      console.log(prefects);
-
       const prefectBtn = document.querySelectorAll(".prefect");
       prefectBtn.forEach((button) => {
         button.removeEventListener("click", makePrefect);
@@ -418,8 +465,6 @@ function statistics() {
   studentsPrHouse.innerHTML = `<p>Gryffindor: ${totalGryf}</p> <p>Slytherin: ${totalSlyth}</p> 
   <p>Hufflepuff: ${totalHuff}</p> <p>Ravenclaw: ${totalRaven}`;
 }
-
-function hackTheSystem() {}
 
 function sorting(sortedList) {
   let direction = 1;
@@ -503,3 +548,12 @@ function search() {
     }
   }
 }
+
+function inquisatorialSquad(student) {
+  if (student.house === "Slytherin" && student.bloodStatus === "Pure blood") {
+    let inqSquadBtn = document.createElement("button");
+    document.querySelector(".popUpBtn").appendChild(inqSquadBtn);
+  }
+}
+
+function hackTheSystem() {}
