@@ -4,6 +4,7 @@ window.addEventListener("DOMContentLoaded", start);
 
 let allStudents = [];
 let expelledStudents = [];
+let prefects = [];
 
 //houses
 let gryffindor = [];
@@ -23,7 +24,7 @@ const Student = {
   nickName: "",
   lastName: "",
   bloodStatus: "",
-  prefect: "none",
+  prefect: false,
   inquisatorialSquad: "",
   house: "",
   expelled: false,
@@ -32,6 +33,8 @@ const Student = {
 
 function start() {
   loadJSON();
+
+  loadBloodStatsJSON();
 
   //making the houses selection clickable
   document.querySelectorAll(".option").forEach((eachButton) => {
@@ -50,6 +53,14 @@ async function loadJSON() {
   const studentData = await response.json();
 
   prepareData(studentData);
+}
+
+async function loadBloodStatsJSON() {
+  const url = "https://petlatkea.dk/2021/hogwarts/families.json";
+  const response = await fetch(url);
+  const bloodData = await response.json();
+
+  console.log(bloodData);
 }
 
 function prepareData(studentData) {
@@ -308,7 +319,9 @@ function displayData(student) {
 
       const indexOfStudent = allStudents.map((element) => element.firstName).indexOf(nameOfStudent);
 
-      expelledStudents = allStudents.splice(indexOfStudent, 1);
+      //Note that we use [0] to get the first (and only) element of the array returned by splice(), which is the removed student.
+      const expelledStudent = allStudents.splice(indexOfStudent, 1)[0];
+      expelledStudents.push(expelledStudent);
 
       popUpDisplay.classList.add("expelledFromHogwarts");
       popUpDisplay.addEventListener("animationend", () => {
@@ -324,6 +337,51 @@ function displayData(student) {
       student.expelled = true;
 
       buildList();
+    }
+
+    const prefectBtn = document.querySelectorAll(".prefect");
+    prefectBtn.forEach((button) => {
+      button.addEventListener("click", makePrefect);
+    });
+
+    function makePrefect() {
+      //(prefect) Student can be made/toggled as prefect so	Only two pr. House
+
+      //same method as in the expel function is used to get the index of the student
+      const nameOfStudent = student.firstName;
+      const indexOfStudent = allStudents.map((element) => element.firstName).indexOf(nameOfStudent);
+
+      let isPrefect = allStudents.filter((student) => student.prefect === true);
+      let prefectCount = isPrefect.length;
+
+      //Checks if the one you selected as prefect is the same gender
+      let isSameGender = (element) => element.gender === student.gender;
+      let onlyOneGender = isPrefect.some(isSameGender);
+
+      //+1 is added because the array starts at 0 and the first row starts at 1
+      const prefectRow = document.querySelector(`tr.studentRow:nth-child(${indexOfStudent + 1}) > td:nth-child(3)`);
+
+      if ((prefectCount < 2 && !onlyOneGender) || student.prefect) {
+        student.prefect = !student.prefect;
+      } else {
+        student.prefect === false;
+      }
+
+      //outcommented is WIP on making the prefects tab visible
+      // const prefectStudent = allStudents.slice(indexOfStudent, indexOfStudent + 1)[0];
+
+      if (student.prefect) {
+        prefectRow.textContent = "Prefect";
+      } else {
+        prefectRow.textContent = "";
+      }
+
+      console.log(prefects);
+
+      const prefectBtn = document.querySelectorAll(".prefect");
+      prefectBtn.forEach((button) => {
+        button.removeEventListener("click", makePrefect);
+      });
     }
   }
 
@@ -418,8 +476,6 @@ function setFilter(filterBy) {
 
   buildList();
 }
-
-function makePrefect() {}
 
 function search() {
   let input = document.querySelector(".input").value;
