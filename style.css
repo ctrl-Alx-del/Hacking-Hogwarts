@@ -122,3 +122,7 @@ section {
 .inquisatorialSquad {
   text-align: center;
 }
+
+.inqSquadBtn {
+  display: none;
+}

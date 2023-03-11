@@ -66,15 +66,16 @@
         <img src="" alt="Photo" class="picture" />
         <img src="" alt="House crest" class="crests" />
       </div>
-      <div class="popUpBtn">
+      <div class="popUpBtn" data-id="id">
         <button class="exit">X</button>
         <button class="expel" data-expel="firstName">Expel</button>
         <button class="prefect">Give or take prefect status</button>
+        <button class="inqSquadBtn">Give or take Inquisitatorial Squad membership</button>
       </div>
     </div>
 
     <template class="students">
-      <tr class="studentRow">
+      <tr class="studentRow" data-id="id">
         <td class="names" data-student="names"></td>
         <td class="bloodStatus" data-student="bloodStatus"></td>
         <td class="prefects" data-student="prefects"></td>

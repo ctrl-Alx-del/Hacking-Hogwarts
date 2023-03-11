@@ -2,6 +2,7 @@
 
 window.addEventListener("DOMContentLoaded", start);
 
+//arrays
 let allStudents = [];
 let expelledStudents = [];
 let prefects = [];
@@ -12,12 +13,14 @@ let slytherin = [];
 let hufflepuff = [];
 let ravenclaw = [];
 
+//settings
 const settings = {
   chosenFilter: "All",
   sortDir: "asc",
   sortBy: "",
 };
 
+//Student class
 const Student = {
   firstName: "",
   middleName: "",
@@ -25,7 +28,7 @@ const Student = {
   lastName: "",
   bloodStatus: "",
   prefect: false,
-  inquisatorialSquad: "",
+  inquisatorialSquad: false,
   house: "",
   expelled: false,
   picture: "",
@@ -69,18 +72,15 @@ function sendData(blood) {
     //Runs these function everytime it loops, not the most efficient, but it works for now...
     prepareBloodStats(blood, eachStudent);
   }
+
+  buildList();
 }
 
 function prepareBloodStats(blood, student) {
   const half = blood.half;
   const pure = blood.pure;
-  let muggle = [];
 
-  //checks if the half blood names are included in the pure blood name. If there's a match it will push it to the muggles array
   for (let i = 0; i < pure.length; i++) {
-    if (half.includes(pure[i])) {
-      muggle.push(pure[i]);
-    }
     //checks if the student has the same name as a pure blood
     if (student.lastName === pure[i]) {
       student.bloodStatus = "Pure blood";
@@ -92,14 +92,6 @@ function prepareBloodStats(blood, student) {
       student.bloodStatus = "Half-blood";
     }
   }
-
-  for (let i = 0; i < muggle.length; i++) {
-    if (student.lastName === muggle[i]) {
-      student.bloodStatus = "Muggle";
-    }
-  }
-
-  buildList();
 }
 
 function prepareData(studentData) {
@@ -274,6 +266,7 @@ function displayData(student) {
   //popup clickable
   clone.querySelector(".studentRow").addEventListener("click", popUp);
 
+  //changes the background color depending on which house it is
   if (student.house === "Hufflepuff") {
     clone.querySelector("[data-student='house']").style.backgroundColor = "yellow";
   } else if (student.house === "Gryffindor") {
@@ -284,14 +277,27 @@ function displayData(student) {
     clone.querySelector("[data-student='house']").style.backgroundColor = "green";
   }
 
+  //Displays the bloodstatus of each student
   if (student.bloodStatus === "Pure blood") {
     clone.querySelector(".bloodStatus").textContent = "Pure blood";
-  } else if (student.bloodStatus === "Half-blood" && student.bloodStatus !== "Muggle") {
+  } else if (student.bloodStatus === "Half-blood") {
     clone.querySelector(".bloodStatus").textContent = "Half-blood";
-  } else if (student.bloodStatus === "Muggle") {
-    clone.querySelector(".bloodStatus").textContent = "Muggle";
   } else if (student.bloodStatus === "") {
     clone.querySelector(".bloodStatus").textContent = "Unknown";
+  }
+
+  //Displays prefects
+  if (student.prefect === true) {
+    clone.querySelector(".prefects").textContent = "Prefect";
+  } else {
+    clone.querySelector(".prefects").textContent = "";
+  }
+
+  //Displays if the student is a member of the inquisitorial squad or not
+  if (student.inquisatorialSquad === true) {
+    clone.querySelector("[data-student='inquisatorialSquad']").textContent = "Member";
+  } else {
+    clone.querySelector("[data-student='inquisatorialSquad']").textContent = "";
   }
 
   //popUp
@@ -352,6 +358,26 @@ function displayData(student) {
 
     function exitPopUp() {
       popUpDisplay.style.display = "none";
+
+      prefectBtn.forEach((button) => {
+        button.removeEventListener("click", makePrefect);
+      });
+
+      const inqSquadBtn = document.querySelectorAll(".inqSquadBtn");
+      inqSquadBtn.forEach((eachButton) => {
+        eachButton.removeEventListener("click", inqSquad);
+      });
+
+      const exitButton = document.querySelector(".exit");
+      exitButton.removeEventListener("click", exitPopUp);
+    }
+
+    //Inquisitorial squad button added
+    const inqSquadBtn = document.querySelector(".inqSquadBtn");
+    if (student.house === "Slytherin" && student.bloodStatus === "Pure blood") {
+      inqSquadBtn.style.display = "block";
+    } else {
+      inqSquadBtn.style.display = "none";
     }
 
     const expelButtons = document.querySelectorAll(".expel");
@@ -388,48 +414,40 @@ function displayData(student) {
       buildList();
     }
 
+    const allInqSquadBtns = document.querySelectorAll(".inqSquadBtn");
+    allInqSquadBtns.forEach((eachButton) => {
+      eachButton.addEventListener("click", inqSquad);
+    });
+
     const prefectBtn = document.querySelectorAll(".prefect");
     prefectBtn.forEach((button) => {
       button.addEventListener("click", makePrefect);
     });
+  }
 
-    function makePrefect() {
-      //(prefect) Student can be made/toggled as prefect so	Only two pr. House
+  function makePrefect() {
+    //(prefect) Student can be made/toggled as prefect so	Only two pr. House
 
-      //same method as in the expel function is used to get the index of the student
-      const nameOfStudent = student.firstName;
-      const indexOfStudent = allStudents.map((element) => element.firstName).indexOf(nameOfStudent);
+    let isPrefect = allStudents.filter((student) => student.prefect === true);
+    let prefectCount = isPrefect.length;
 
-      let isPrefect = allStudents.filter((student) => student.prefect === true);
-      let prefectCount = isPrefect.length;
+    //Checks if the one you selected as prefect is the same gender
+    let isSameGender = (element) => element.gender === student.gender;
+    let onlyOneGender = isPrefect.some(isSameGender);
 
-      //Checks if the one you selected as prefect is the same gender
-      let isSameGender = (element) => element.gender === student.gender;
-      let onlyOneGender = isPrefect.some(isSameGender);
-
-      //+1 is added because the array starts at 0 and the first row starts at 1
-      const prefectRow = document.querySelector(`tr.studentRow:nth-child(${indexOfStudent + 1}) > td:nth-child(3)`);
-
-      if ((prefectCount < 2 && !onlyOneGender) || student.prefect) {
-        student.prefect = !student.prefect;
-      } else {
-        student.prefect === false;
-      }
-
-      //outcommented is WIP on making the prefects tab visible
-      // const prefectStudent = allStudents.slice(indexOfStudent, indexOfStudent + 1)[0];
-
-      if (student.prefect) {
-        prefectRow.textContent = "Prefect";
-      } else {
-        prefectRow.textContent = "";
-      }
-
-      const prefectBtn = document.querySelectorAll(".prefect");
-      prefectBtn.forEach((button) => {
-        button.removeEventListener("click", makePrefect);
-      });
+    if ((prefectCount < 2 && !onlyOneGender) || student.prefect) {
+      student.prefect = !student.prefect;
+    } else {
+      student.prefect === false;
     }
+
+    buildList();
+  }
+
+  function inqSquad() {
+    student.inquisatorialSquad = !student.inquisatorialSquad;
+
+    buildList();
   }
 
   document.querySelector("#list tbody").appendChild(clone);
@@ -546,13 +564,6 @@ function search() {
       prefects[i].style.display = "block";
       inquisatorialSquad[i].style.display = "block";
     }
-  }
-}
-
-function inquisatorialSquad(student) {
-  if (student.house === "Slytherin" && student.bloodStatus === "Pure blood") {
-    let inqSquadBtn = document.createElement("button");
-    document.querySelector(".popUpBtn").appendChild(inqSquadBtn);
   }
 }
 
