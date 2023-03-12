@@ -319,6 +319,32 @@ function displayData(student) {
 
     crests.src = `images/crests/${student.house}.png`;
 
+    popUpStats();
+
+    //shows the status of each parameter initially
+    function popUpStats() {
+      const expelledStatus = document.querySelector(".expelledStatus");
+      if (student.expelled) {
+        expelledStatus.textContent = `Expelled status: ${student.expelled}`;
+      } else {
+        expelledStatus.textContent = `Expelled status: ${student.expelled}`;
+      }
+
+      const prefectStatus = document.querySelector(".prefectStatus");
+      if (student.prefect) {
+        prefectStatus.textContent = `Prefect status: ${student.prefect}`;
+      } else {
+        prefectStatus.textContent = `Prefect status: ${student.prefect}`;
+      }
+
+      const inqSquadStatus = document.querySelector(".inqSquadStatus");
+      if (student.inquisatorialSquad) {
+        inqSquadStatus.textContent = `Inquisitatorial squad status: ${student.inquisatorialSquad}`;
+      } else {
+        inqSquadStatus.textContent = `Inquisitatorial squad status: ${student.inquisatorialSquad}`;
+      }
+    }
+
     if (student.house === "Gryffindor") {
       crests.classList.remove("ravenclaw");
       crests.classList.remove("hufflepuff");
@@ -417,6 +443,13 @@ function displayData(student) {
         });
       }
 
+      const expelledStatus = document.querySelector(".expelledStatus");
+      if (student.expelled) {
+        expelledStatus.textContent = `Expelled status: ${student.expelled}`;
+      } else {
+        expelledStatus.textContent = `Expelled status: ${student.expelled}`;
+      }
+
       //removes the eventlistener when you click expel, so it won't count twice next time you click.
       expelButtons.forEach((eachButton) => {
         eachButton.removeEventListener("click", expel);
@@ -452,11 +485,25 @@ function displayData(student) {
       student.prefect === false;
     }
 
+    const prefectStatus = document.querySelector(".prefectStatus");
+    if (student.prefect) {
+      prefectStatus.textContent = `Prefect status: ${student.prefect}`;
+    } else {
+      prefectStatus.textContent = `Prefect status: ${student.prefect}`;
+    }
+
     buildList();
   }
 
   function inqSquad() {
     student.inquisatorialSquad = !student.inquisatorialSquad;
+
+    const inqSquadStatus = document.querySelector(".inqSquadStatus");
+    if (student.inquisatorialSquad) {
+      inqSquadStatus.textContent = `Inquisitatorial squad status: ${student.inquisatorialSquad}`;
+    } else {
+      inqSquadStatus.textContent = `Inquisitatorial squad status: ${student.inquisatorialSquad}`;
+    }
 
     buildList();
   }
@@ -657,7 +704,6 @@ function inqSquadNullified() {
 
   inqSquadBtn.forEach((button) => {
     button.addEventListener("click", nullifyStudent);
-    console.log("yee");
   });
 }
 
