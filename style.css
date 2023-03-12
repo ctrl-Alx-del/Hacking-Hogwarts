@@ -134,3 +134,13 @@ section {
 .Photos {
   margin-left: 20px;
 }
+
+.Buttons {
+  display: flex;
+  justify-content: center;
+}
+
+#changer {
+  height: 20px;
+  width: 100px;
+}
