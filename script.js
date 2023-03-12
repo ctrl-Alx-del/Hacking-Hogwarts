@@ -6,6 +6,8 @@ window.addEventListener("DOMContentLoaded", start);
 let allStudents = [];
 let expelledStudents = [];
 let prefects = [];
+//WIP
+let bloodStats = [];
 
 //houses
 let gryffindor = [];
@@ -18,6 +20,8 @@ const settings = {
   chosenFilter: "All",
   sortDir: "asc",
   sortBy: "",
+  hacked: false,
+  hackIteration: 0,
 };
 
 //Student class
@@ -64,12 +68,13 @@ async function loadBloodStatsJSON() {
   const bloodData = await response.json();
 
   sendData(bloodData);
+  sendBloodStats(bloodData);
 }
 
 function sendData(blood) {
   for (let i = 0; i < allStudents.length; i++) {
     let eachStudent = allStudents[i];
-    //Runs these function everytime it loops, not the most efficient, but it works for now...
+    //Runs these function everytime it loops, not the most efficient, but it works for now... WIP
     prepareBloodStats(blood, eachStudent);
   }
 
@@ -83,13 +88,13 @@ function prepareBloodStats(blood, student) {
   for (let i = 0; i < pure.length; i++) {
     //checks if the student has the same name as a pure blood
     if (student.lastName === pure[i]) {
-      student.bloodStatus = "Pure blood";
+      return (student.bloodStatus = "Pure blood");
     }
   }
 
   for (let i = 0; i < half.length; i++) {
     if (student.lastName === half[i]) {
-      student.bloodStatus = "Half-blood";
+      return (student.bloodStatus = "Half-blood");
     }
   }
 }
@@ -394,22 +399,28 @@ function displayData(student) {
 
       const indexOfStudent = allStudents.map((element) => element.firstName).indexOf(nameOfStudent);
 
-      //Note that we use [0] to get the first (and only) element of the array returned by splice(), which is the removed student.
-      const expelledStudent = allStudents.splice(indexOfStudent, 1)[0];
-      expelledStudents.push(expelledStudent);
+      if (student.unexpellable === true) {
+        student.expelled = false;
+        window.alert("Student cannot be expelled from Hogwarts!");
+      } else {
+        //sets the key value of expelled to true
+        student.expelled = true;
+      }
 
-      popUpDisplay.classList.add("expelledFromHogwarts");
-      popUpDisplay.addEventListener("animationend", () => {
-        popUpDisplay.style.display = "none";
-      });
+      //Note that we use [0] to get the first (and only) element of the array returned by splice(), which is the removed student.
+      if (student.expelled) {
+        const expelledStudent = allStudents.splice(indexOfStudent, 1)[0];
+        expelledStudents.push(expelledStudent);
+        popUpDisplay.classList.add("expelledFromHogwarts");
+        popUpDisplay.addEventListener("animationend", () => {
+          popUpDisplay.style.display = "none";
+        });
+      }
 
       //removes the eventlistener when you click expel, so it won't count twice next time you click.
       expelButtons.forEach((eachButton) => {
         eachButton.removeEventListener("click", expel);
       });
-
-      //sets the key value of expelled to true
-      student.expelled = true;
 
       buildList();
     }
@@ -567,4 +578,96 @@ function search() {
   }
 }
 
-function hackTheSystem() {}
+function hackTheSystem(firstName, middleName, lastName) {
+  //sets the settings to hacked
+  settings.hackIteration++;
+
+  if (settings.hackIteration === 1) {
+    settings.hacked = true;
+  } else {
+    settings.hacked = false;
+  }
+
+  if (settings.hacked === true) {
+    const newStudent = {
+      firstName: firstName,
+      middleName: middleName,
+      lastName: lastName,
+      nickName: "",
+      bloodStatus: "Half-blood",
+      house: "Hufflepuff",
+      prefect: true,
+      inquisatorialSquad: true,
+      unexpellable: true,
+      expelled: false,
+    };
+
+    inqSquadNullified();
+
+    scrambleBloodData(bloodStats);
+
+    allStudents.unshift(newStudent);
+
+    buildList();
+  }
+}
+
+function sendBloodStats(blood) {
+  bloodStats = blood;
+  return bloodStats;
+}
+
+function scrambleBloodData(blood) {
+  const half = blood.half;
+  const pure = blood.pure;
+
+  const pureStudents = allStudents.filter(isPure);
+
+  function isPure(student) {
+    for (let i = 0; i < pure.length; i++) {
+      if (student.lastName === pure[i] && student.bloodStatus === "Pure blood") {
+        return true;
+      }
+    }
+  }
+
+  //randomizes pure bloods into what is possible
+  const bloodStatuses = ["", "Half-blood", "Pure blood"];
+  pureStudents.forEach((student) => {
+    const randomIndex = Math.floor(Math.random() * bloodStatuses.length);
+    student.bloodStatus = bloodStatuses[randomIndex];
+  });
+
+  const onlyHalfBloods = allStudents.filter(isHalf);
+
+  function isHalf(student) {
+    for (let i = 0; i < half.length; i++) {
+      if (student.lastName === half[i]) {
+        return true;
+      }
+    }
+  }
+
+  //makes the half-bloods into pure bloods
+  onlyHalfBloods.forEach((student) => (student.bloodStatus = bloodStatuses[2]));
+}
+
+function inqSquadNullified() {
+  const inqSquadBtn = document.querySelectorAll(".inqSquadBtn");
+
+  inqSquadBtn.forEach((button) => {
+    button.addEventListener("click", nullifyStudent);
+    console.log("yee");
+  });
+}
+
+function nullifyStudent() {
+  allStudents.forEach(eachStudentNullified);
+
+  function eachStudentNullified(student) {
+    setTimeout(() => {
+      student.inquisatorialSquad = false;
+      buildList();
+    }, 3000);
+  }
+}
